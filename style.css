@@ -239,7 +239,8 @@ p + p { margin-top: 1.2rem; }
   transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.site-header.scrolled {
+.site-header.scrolled,
+.site-header.nav-open {
   background: var(--paper-natural);
   border-bottom: var(--border-thick);
   box-shadow: 0 4px 20px rgba(59, 13, 82, 0.08);
@@ -255,8 +256,9 @@ p + p { margin-top: 1.2rem; }
   transition: height 0.4s ease;
 }
 
-.site-header.scrolled .nav-inner {
-  height: 90px; /* Compress height slightly on scroll */
+.site-header.scrolled .nav-inner,
+.site-header.nav-open .nav-inner {
+  height: 90px; /* Compress height slightly on scroll or menu open */
 }
 
 .nav-logo {
@@ -273,8 +275,9 @@ p + p { margin-top: 1.2rem; }
   transition: width 0.4s ease, height 0.4s ease;
 }
 
-.site-header.scrolled .logo-img {
-  width: 72px; /* Shrink logo slightly on scroll */
+.site-header.scrolled .logo-img,
+.site-header.nav-open .logo-img {
+  width: 72px; /* Shrink logo slightly on scroll or menu open */
   height: 72px;
 }
 
@@ -296,11 +299,13 @@ p + p { margin-top: 1.2rem; }
   transition: color 0.4s ease;
 }
 
-.site-header.scrolled .logo-wordmark {
+.site-header.scrolled .logo-wordmark,
+.site-header.nav-open .logo-wordmark {
   color: var(--ink-purple);
 }
 
-.site-header.scrolled .logo-wordmark em {
+.site-header.scrolled .logo-wordmark em,
+.site-header.nav-open .logo-wordmark em {
   color: var(--riso-magenta);
 }
 
@@ -328,11 +333,13 @@ p + p { margin-top: 1.2rem; }
   color: var(--ink-purple);
 }
 
-.site-header.scrolled .nav-links a {
+.site-header.scrolled .nav-links a,
+.site-header.nav-open .nav-links a {
   color: var(--ink-purple);
 }
 
-.site-header.scrolled .nav-links a:hover {
+.site-header.scrolled .nav-links a:hover,
+.site-header.nav-open .nav-links a:hover {
   background: var(--riso-gold);
   border-color: var(--ink-purple);
   color: var(--ink-purple);
@@ -352,7 +359,8 @@ p + p { margin-top: 1.2rem; }
   box-shadow: 0px 0px 0px !important;
 }
 
-.site-header.scrolled .nav-cta {
+.site-header.scrolled .nav-cta,
+.site-header.nav-open .nav-cta {
   border: var(--border-thin) !important;
   box-shadow: var(--shadow-flat-sm);
 }
@@ -375,10 +383,12 @@ p + p { margin-top: 1.2rem; }
   transition: background-color 0.4s ease;
 }
 
-.site-header.scrolled .nav-toggle {
+.site-header.scrolled .nav-toggle,
+.site-header.nav-open .nav-toggle {
   border-color: var(--ink-purple);
 }
-.site-header.scrolled .nav-toggle span {
+.site-header.scrolled .nav-toggle span,
+.site-header.nav-open .nav-toggle span {
   background: var(--ink-purple);
 }
 
@@ -1339,6 +1349,9 @@ p + p { margin-top: 1.2rem; }
   border-bottom: var(--border-thin);
   padding-bottom: 20px;
   margin-bottom: 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 .partner-logo-placeholder--alt { color: var(--riso-magenta); }
@@ -1589,17 +1602,48 @@ p + p { margin-top: 1.2rem; }
   .about-img-stack { height: 380px; }
   .img-frame--back { width: 280px; height: 320px; }
   .img-frame--front { width: 240px; height: 290px; }
+  .about-pull-quote {
+    width: 220px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    padding: 14px 18px;
+    bottom: -15px;
+  }
+  .about-pull-quote p {
+    font-size: 0.95rem;
+  }
 
   .featured-inner { grid-template-columns: 1fr; gap: 56px; }
   .featured-img-wrap img { height: 320px; }
 
+  /* 2x2 Clean Grid Borders */
   .impact-grid { grid-template-columns: repeat(2, 1fr); }
+  .impact-stat {
+    border-right: none;
+    border-bottom: var(--border-thin);
+  }
+  .impact-stat:nth-child(odd) {
+    border-right: var(--border-thin);
+  }
+  .impact-stat:nth-child(3),
+  .impact-stat:nth-child(4) {
+    border-bottom: none;
+  }
 
   .footer-top { grid-template-columns: 1fr; }
 
   /* Navigation overrides for tablet and mobile (hamburger menu) */
   .nav-inner { height: 80px; }
+  .site-header.scrolled .nav-inner,
+  .site-header.nav-open .nav-inner {
+    height: 70px;
+  }
   .logo-img { width: 56px; height: 56px; }
+  .site-header.scrolled .logo-img,
+  .site-header.nav-open .logo-img {
+    width: 48px;
+    height: 48px;
+  }
 
   .nav-links { 
     display: none;
@@ -1613,7 +1657,13 @@ p + p { margin-top: 1.2rem; }
     padding: 24px;
     gap: 8px;
     z-index: 99;
+    transition: top 0.4s ease;
   }
+  .site-header.scrolled .nav-links,
+  .site-header.nav-open .nav-links {
+    top: 70px;
+  }
+
   .nav-links.open { display: flex; }
   .nav-links a { 
     display: block; 
@@ -1635,11 +1685,17 @@ p + p { margin-top: 1.2rem; }
   .section { padding: 80px 0; }
 
   .hero { height: 85vh; min-height: 520px; }
-  .hero-content { padding: 100px 0 60px; }
+  .hero-content {
+    width: min(1200px, 100% - 32px); /* Align with main container */
+    padding: 100px 0 60px;
+  }
   .hero-headline { font-size: clamp(2.2rem, 6.5vw, 4.5rem); }
   .hero-sub { font-size: 1.05rem; max-width: 100%; }
 
   .programs-grid { grid-template-columns: 1fr; }
+  
+  /* Prevent horizontal card overflow on small screens */
+  .partners-grid { grid-template-columns: 1fr; }
 
   .hero-controls { bottom: 20px; left: 20px; right: 20px; width: auto; transform: none; display: flex; justify-content: space-between; }
   .journey-slides-wrap { height: 320px; }
@@ -1664,8 +1720,13 @@ p + p { margin-top: 1.2rem; }
   .footer-nav { grid-template-columns: 1fr 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
 
+  /* Reset odd border-right from 2x2 grid */
   .impact-grid { grid-template-columns: 1fr; }
-  .impact-stat { border-right: none; border-bottom: var(--border-thin); }
+  .impact-stat,
+  .impact-stat:nth-child(odd) {
+    border-right: none;
+    border-bottom: var(--border-thin);
+  }
   .impact-stat:last-child { border-bottom: none; }
 }
 
@@ -1673,6 +1734,24 @@ p + p { margin-top: 1.2rem; }
   .about-img-stack { height: 300px; }
   .img-frame--back { width: 75%; height: 260px; }
   .img-frame--front { width: 65%; height: 230px; right: 0px; }
+  .about-pull-quote {
+    width: 200px;
+    padding: 12px 14px;
+    bottom: -20px;
+  }
+  .about-pull-quote p {
+    font-size: 0.85rem;
+  }
+
+  .nav-logo {
+    gap: 8px;
+  }
+  .logo-wordmark {
+    font-size: 1.20rem;
+  }
+  .logo-wordmark em {
+    font-size: 0.9rem;
+  }
 
   .gallery-masonry { grid-template-columns: 1fr; grid-auto-rows: 250px; }
   .gallery-item--wide { grid-column: span 1; }

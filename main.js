@@ -18,6 +18,7 @@
 
   navToggle.addEventListener('click', () => {
     const open = navLinks.classList.toggle('open');
+    header.classList.toggle('nav-open', open);
     navToggle.setAttribute('aria-expanded', String(open));
   });
 
@@ -25,6 +26,7 @@
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('open');
+      header.classList.remove('nav-open');
       navToggle.setAttribute('aria-expanded', 'false');
     });
   });
