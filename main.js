@@ -37,12 +37,27 @@
   const heroMuteBtn = document.getElementById('heroMuteBtn');
 
   if (heroVideo) {
+    // Attempt play and catch rejection (e.g. Low Power Mode or Autoplay restrictions)
+    const playPromise = heroVideo.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.warn("Autoplay blocked or failed, displaying poster backdrop:", error);
+        const heroSection = document.getElementById('hero');
+        if (heroSection) {
+          heroSection.classList.add('video-blocked');
+        }
+      });
+    }
+
     // Play/Pause Toggle
     if (heroPlayPauseBtn) {
       heroPlayPauseBtn.addEventListener('click', () => {
         if (heroVideo.paused) {
-          heroVideo.play();
-          heroPlayPauseBtn.textContent = '✦ PAUSE';
+          heroVideo.play().then(() => {
+            heroPlayPauseBtn.textContent = '✦ PAUSE';
+          }).catch(err => {
+            console.error("Failed to play video:", err);
+          });
         } else {
           heroVideo.pause();
           heroPlayPauseBtn.textContent = '✦ PLAY';
